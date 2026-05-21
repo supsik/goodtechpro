@@ -4,7 +4,7 @@
 			<nuxt-link class="header__logo" to="/">GoodTech</nuxt-link>
 			<nav class="header__navigation">
 				<ul>
-					<li v-for="item in headerNav">
+					<li v-for="item in layoutNavigation">
 						<nuxt-link :to="item.link">{{ item.name }}</nuxt-link>
 					</li>
 				</ul>
@@ -13,21 +13,15 @@
 		</div>
 	</div>
 </template>
-<script setup>
-const headerNav = ref([
-	{
-		name: "О нас",
-		link: "/about-us",
-	},
-	{
-		name: "Наши проекты",
-		link: "/portfolio",
-	},
-	{
-		name: "Политика конфиденциальности",
-		link: "/confidential",
-	},
-]);
+<script setup lang="ts">
+interface Navigation {
+	name: String,
+	link: string,
+};
+
+const props = defineProps({
+	layoutNavigation: Array<Navigation>,
+});
 </script>
 <style lang="scss">
 .header {
@@ -50,8 +44,6 @@ const headerNav = ref([
 
 .header__logo {
 	margin-left: 42px;
-	font-size: 42px;
-	font-weight: 500;
 }
 
 .header__navigation {
@@ -90,16 +82,5 @@ const headerNav = ref([
   		transform: scale3d(1, 1, 1);
 		}
 	}
-}
-
-.header__btn {
-	width: 240px;
-	height: 56px;
-	margin-left: auto;
-	background-color: #fff;
-	border-radius: 16px;
-	color: #0048ff;
-	font-size: 22px;
-	font-weight: 500;
 }
 </style>

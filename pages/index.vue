@@ -1,5 +1,6 @@
 <template>
-	<div>
+	<div class="index-page">
+		<hero />
 	</div>
 </template>
 <script setup>
