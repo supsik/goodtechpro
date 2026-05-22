@@ -2,5 +2,17 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-	css: ['assets/scss/index.scss']
+	css: ['assets/scss/index.scss'],
+	vite: {
+		css: {
+			preprocessorOptions: {
+				scss: {
+					additionalData: `
+						@use "assets/scss/variables.scss" as *;
+						@use "assets/scss/mixins.scss" as *;
+					`,
+				}
+			}
+		}
+	}
 })

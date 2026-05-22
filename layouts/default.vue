@@ -26,17 +26,28 @@ const layoutNavigation = ref([
 .footer__logo {
 	font-size: 42px;
 	font-weight: 500;
+
+	@include mq($xl) { font-size: 32px }
 }
 
-.header__btn,
-.footer__btn {
-	width: 240px;
-	height: 56px;
-	margin-left: auto;
+.order__btn {
 	background-color: #fff;
 	border-radius: 16px;
 	color: #0048ff;
-	font-size: 22px;
+	font-size: clamp(1.13rem, calc(0.375rem + 0.833vw), 1.38rem);
+	padding: 14px 32px;
 	font-weight: 500;
+	transition: .25s ease;
+
+	&:hover {
+		transform: scale(1.1);
+		border-radius: 30px;
+		box-shadow: 0 4px 2px 0 #0000003a;
+	}
+
+	@include mq($xl) {
+		font-size: clamp(0.88rem, calc(0.567rem + 0.481vw), 1.00rem);
+		padding: 10px 14px;
+	}
 }
 </style>

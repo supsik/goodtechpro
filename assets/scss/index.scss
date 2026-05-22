@@ -3,4 +3,8 @@
 
 .container {
 	padding-inline: 120px;
+	
+	@include mq($lg) { padding-inline: 52px }
+
+	@include mq($sm) { padding-inline: 32px }
 }

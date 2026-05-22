@@ -8,7 +8,7 @@
 				</li>
 			</ul>
 		</nav>
-		<button class="footer__btn">Оставить заявку</button>
+		<button class="order__btn">Оставить заявку</button>
 	</div>
 </template>
 <script setup lang="ts">
@@ -26,6 +26,10 @@ const props = defineProps({
 	background-color: #0c1030;
 	padding-block: 52px 32px;
 	margin-top: auto;
+
+	.order__btn { margin-top: 42px }
+
+	@include mq($lg) { padding-block: 32px 24px }
 }
 
 .footer__navigation {
@@ -44,9 +48,5 @@ const props = defineProps({
 
 		&:hover { color: #FFF }
 	}
-}
-
-.footer__btn {
-	margin-top: 42px;
 }
 </style>
