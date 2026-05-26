@@ -57,6 +57,7 @@ const isBurgerActive = ref(false);
 .header {
 	width: 100%;
 	position: fixed;
+	z-index: 999;
 	margin-top: 42px;
 
 	@include mq($lg) { padding-inline: 32px }

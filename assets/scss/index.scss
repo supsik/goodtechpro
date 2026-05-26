@@ -6,5 +6,5 @@
 	
 	@include mq($lg) { padding-inline: 52px }
 
-	@include mq($sm) { padding-inline: 32px }
+	@include mq($md) { padding-inline: 32px }
 }

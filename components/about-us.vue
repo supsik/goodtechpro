@@ -1,38 +1,62 @@
 <template>
-	<div class="about-us container">
-		<swiper
-			class="about-us__swiper"
-			v-bind="swiperOptions"
-			@swiper="onSwiper"
-			@slide-change="onSlideChange"
-		>
-			<swiper-slide
-				class="about-us__item"
-				v-for="(slide, index) in data"
-				:key="slide.image"
+	<div
+		class="about-us container"
+		@mousemove="handleMouseMove"
+		@mouseleave="handleMouseLeave"
+	>
+		<div class="about-us__swiper-wrapper" :style="{ height: swiperHeight + 'px' }">
+			<swiper
+				class="about-us__swiper"
+				v-bind="swiperOptions"
+				@slide-change="onSlideChange"
+				@swiper="setSwiperInstance"
 			>
-				<div class="about-us__item-left">
-					<h2>Немного о нас</h2>
-					<div class="about-us__item-description" v-html="slide.content" />
-				</div>
-			</swiper-slide>
-			<div class="about-us__custom-pagination">
-				<div 
-					v-for="(slide, index) in data" 
-					:key="index"
-					class="pagination-bullet"
-					:class="{ 'active': currentIndex === index, 'completed': index < currentIndex }"
-					@click="goToSlide(index)"
+				<swiper-slide
+					class="about-us__item"
+					v-for="(slide, index) in data"
+					:key="slide.image"
 				>
-					<div class="bullet-progress" :style="{ width: getBulletProgress(index) }"></div>
-				</div>
+					<div class="about-us__item-left">
+						<h2>Немного о нас</h2>
+						<div 
+							class="about-us__item-description" 
+							v-html="slide.content"
+							ref="slideContents"
+						/>
+					</div>
+					<div 
+						class="about-us__item-right"
+					>
+						<img 
+							:src="slide.image" 
+							:style="currentIndex === index ? imageTransform : {}"
+						>
+					</div>
+				</swiper-slide>
+			</swiper>
+		</div>
+		<div class="about-us__pagination">
+			<div 
+				v-for="(_, index) in data" 
+				:key="index"
+				class="about-us__bullet"
+				:class="{ 
+					'about-us__bullet--active': currentIndex === index,
+					'about-us__bullet--completed': currentIndex > index
+				}"
+				@click="goToSlide(index)"
+			>
+				<div 
+					v-if="currentIndex === index" 
+					class="about-us__bullet-progress"
+					:style="{ width: progressWidth + '%' }"
+				/>
 			</div>
-		</swiper>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue';
 import {
 	Swiper,
 	SwiperSlide
@@ -41,9 +65,9 @@ import {
 	EffectFade,
 	Autoplay
 } from 'swiper/modules';
-import type { SwiperOptions } from 'swiper/types';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
+import type { SwiperOptions, Swiper as SwiperType } from 'swiper/types';
 
 const data = ref([
 	{
@@ -65,104 +89,134 @@ const data = ref([
 	}
 ]);
 
-const currentIndex = ref(0);
-let swiperInstance: any = null;
+const swiperInstance  = ref<SwiperType | null>(null);
+const progressWidth   = ref(0);
+const currentIndex    = ref(0);
+const swiperHeight    = ref(0);
+
+const imageTransform = ref({});
+
+const handleMouseMove = (event: MouseEvent) => {
+	const target = event.currentTarget as HTMLElement;
+	const rect = target.getBoundingClientRect();
+	
+	const mouseX = (event.clientX - rect.left) / rect.width;
+	const mouseY = (event.clientY - rect.top) / rect.height;
+	
+	const rotateY = (mouseX - 0.5) * 30;
+	const rotateX = (mouseY - 0.5) * -30;
+
+	const translateX = (mouseX - 0.5) * 40;
+	const translateY = (mouseY - 0.5) * 40;
+	
+	imageTransform.value = {
+		transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateX(${translateX}px) translateY(${translateY}px) scale3d(1.05, 1.05, 1.05)`,
+		transition: 'transform 0.1s ease-out'
+	};
+};
+
+const handleMouseLeave = () => {
+	imageTransform.value = {
+		transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateX(0px) translateY(0px) scale3d(1, 1, 1)',
+		transition: 'transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1)'
+	};
+};
 
 const swiperOptions = ref<SwiperOptions>({
-	slidesPerView : 1,
-	effect        : 'fade',
-	modules       : [ EffectFade, Autoplay ],
+	slidesPerView  : 1,
+	effect         : 'fade',
+	loop           : false,
+	allowTouchMove : true,
+	modules        : [EffectFade, Autoplay],
 	fadeEffect: {
 		crossFade: true
 	},
 	autoplay: {
-		delay: 6000,
-		disableOnInteraction: false,
+		delay                : 5000,
+		disableOnInteraction : false,
+		pauseOnMouseEnter    : true
 	},
-	loop: false,
-	allowTouchMove: false,
+	breakpoints: {
+		768: {
+			allowTouchMove : false,
+		}
+	},
+	on: {
+		autoplayTimeLeft: (swiper: SwiperType, timeLeft: number, progress: number) => {
+			progressWidth.value = progress * 100;
+		}
+	}
 });
 
-const onSwiper = (swiper: any) => {
-	swiperInstance = swiper;
+const setSwiperInstance = (swiper: SwiperType) => {
+	swiperInstance.value = swiper;
+	progressWidth.value = 0;
+	updateHeight();
 };
 
-const onSlideChange = (swiper: any) => {
+const onSlideChange = (swiper: SwiperType) => {
 	currentIndex.value = swiper.activeIndex;
+	updateHeight();
+	imageTransform.value = {};
 };
 
-const getBulletProgress = (index: number) => {
-	if (index === currentIndex.value)
-		return 'var(--progress-width)';
-
-	return index < currentIndex.value ? '100%' : '0%';
+const updateHeight = () => {
+	nextTick(() => {
+		const activeSlide = document.querySelector('.swiper-slide-active');
+		if (activeSlide) {
+			const height = activeSlide.scrollHeight;
+			swiperHeight.value = height;
+		}
+	});
 };
 
 const goToSlide = (index: number) => {
-	if (swiperInstance) {
-		swiperInstance.slideTo(index);
-
-		if (swiperInstance.autoplay) {
-			swiperInstance.autoplay.stop();
-			swiperInstance.autoplay.start();
+	if (swiperInstance.value && index !== currentIndex.value) {
+		swiperInstance.value.slideTo(index);
+		progressWidth.value = 0;
+		
+		if (swiperInstance.value.autoplay) {
+			swiperInstance.value.autoplay.stop();
+			swiperInstance.value.autoplay.start();
 		}
 	}
 };
 
-let progressAnimationFrame: any = null;
-let startTime = 0;
-const PROGRESS_DURATION = 6000;
-
-const updateProgress = (timestamp: number) => {
-	if (!startTime)
-		startTime = timestamp;
-	
-	const elapsed = timestamp - startTime;
-	const progress = Math.min((elapsed / PROGRESS_DURATION) * 100, 100);
-	
-	document.documentElement.style.setProperty('--progress-width', `${progress}%`);
-	
-	if (progress < 100)
-		progressAnimationFrame = requestAnimationFrame(updateProgress);
-	else
-		cancelAnimationFrame(progressAnimationFrame);
+const handleResize = () => {
+	if (swiperInstance.value)
+		updateHeight();
 };
 
-watch(currentIndex, (newIndex, oldIndex) => {
-	if (progressAnimationFrame) {
-		cancelAnimationFrame(progressAnimationFrame);
-		progressAnimationFrame = null;
-	}
-	startTime = 0;
-	
-	progressAnimationFrame = requestAnimationFrame(updateProgress);
-	
-	setTimeout(() => {
-		if (!progressAnimationFrame)
-			progressAnimationFrame = requestAnimationFrame(updateProgress);
-	}, 10);
-}, { immediate: true });
+onMounted(() => {
+	window.addEventListener('resize', handleResize);
+});
 
 onUnmounted(() => {
-	if (progressAnimationFrame)
-		cancelAnimationFrame(progressAnimationFrame);
+	window.removeEventListener('resize', handleResize);
 });
 </script>
 
 <style lang='scss'>
 .about-us {
 	padding-block: 52px;
+
+	@include mq($md) { padding-block: 32px }
+}
+
+.about-us__swiper-wrapper {
+	transition: height 0.3s ease;
+	overflow: visible;
 }
 
 .about-us__swiper {
-	overflow: hidden;
+	overflow: visible;
 	position: relative;
-	padding-bottom: 80px;
 }
 
 .about-us__item {
 	display: flex;
 	justify-content: space-between;
+	gap: 24px;
 }
 
 .about-us__item-left {
@@ -172,6 +226,38 @@ onUnmounted(() => {
 		font-size: 52px;
 		font-weight: 500;
 	}
+
+	@include mq($xl) {
+		h2 { font-size: 32px }
+	}
+
+	@include mq($lg) {
+		h2 { font-size: clamp(1rem, calc(0.6514rem + 1.5075vw), 1.375rem) }
+	}
+}
+
+.about-us__item-right {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	
+	img {
+		height: 400px;
+		will-change: transform;
+		backface-visibility: hidden;
+	}
+
+	@include mq($xl) {
+		img { height: 240px }
+	}
+
+	@include mq($lg) {
+		img { height: 200px }
+	}
+
+	@include mq($md) { display: none }
 }
 
 .about-us__item-description {
@@ -183,101 +269,63 @@ onUnmounted(() => {
 		margin-top: 16px;
 		padding-left: 32px;
 	}
+
+	li {
+		list-style: circle;
+		list-style-type: disc;
+	}
+
+	@include mq($xl) {
+		margin-top: 24px;
+		font-size: 22px;
+	}
+
+	@include mq($lg) {
+		margin-top: 20px;
+		font-size: clamp(0.75rem, calc(0.4014rem + 1.5075vw), 1.125rem);
+	}
 }
 
-// Кастомная пагинация в виде вытянутых bullets
-.about-us__custom-pagination {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
+.about-us__pagination {
 	display: flex;
-	justify-content: center;
 	gap: 12px;
-	padding: 20px 0;
-	z-index: 10;
+	margin-top: 42px;
+	position: relative;
+	z-index: 3;
 }
 
-.pagination-bullet {
-	width: 60px;
-	height: 4px;
-	background: rgba(255, 255, 255, 0.3);
-	border-radius: 2px;
+.about-us__bullet {
+	width: 130px;
+	height: 6px;
+	background: #0C1448;
+	border-radius: 4px;
 	cursor: pointer;
-	transition: all 0.3s ease;
 	position: relative;
 	overflow: hidden;
+	transition: all 0.3s ease;
 	
 	&:hover {
-		background: rgba(255, 255, 255, 0.5);
+		background: #101b61;
 		transform: scaleY(1.5);
 	}
 	
-	// Заполненные предыдущие слайды - полностью белые
-	&.completed {
-		background: #ffffff;
-		
-		.bullet-progress {
-			display: none;
-		}
-	}
+	&--completed { background: #FFF }
 	
-	// Активный слайд
-	&.active {
-		background: rgba(255, 255, 255, 0.3);
-		
-		.bullet-progress {
-			background: #ffffff;
-			width: var(--progress-width, 0%);
-			height: 100%;
-			transition: width linear;
-			border-radius: 2px;
-		}
+	&--active { background: #FFF }
+
+	@include mq($lg) {
+		width: 90px;
+		height: 4px;
 	}
 }
 
-.bullet-progress {
+.about-us__bullet-progress {
 	position: absolute;
 	top: 0;
 	left: 0;
 	height: 100%;
-	background: #ffffff;
+	background: #000000;
 	border-radius: 2px;
 	transition: width linear;
-}
-
-// Адаптив для мобильных устройств
-@media (max-width: 768px) {
-	.about-us__swiper {
-		padding-bottom: 60px;
-	}
-	
-	.about-us__custom-pagination {
-		gap: 8px;
-	}
-	
-	.pagination-bullet {
-		width: 40px;
-		height: 3px;
-	}
-	
-	.about-us__item-left {
-		max-width: 100%;
-
-		h2 {
-			font-size: 36px;
-		}
-	}
-
-	.about-us__item-description {
-		font-size: 20px;
-	}
-}
-
-// Анимация для fade эффекта
-.swiper-fade {
-	.swiper-slide {
-		transition-property: opacity;
-	}
 }
 </style>

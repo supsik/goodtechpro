@@ -1,7 +1,9 @@
 <template>
 	<div class="index-page">
 		<hero />
-		<about-us />
+		<client-only>
+			<about-us />
+		</client-only>
 	</div>
 </template>
 <script setup>
