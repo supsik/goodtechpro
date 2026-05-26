@@ -11,6 +11,7 @@
 	height: 100vh;
 	background-image: url("/images/hero-background.png");
 	background-size: cover;
+	background-position: bottom;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -18,7 +19,7 @@
 	.order__btn {
 		width: 320px;
 		height: 62px;
-		margin-top: 240px;
+		margin-top: 16vh;
 		border-radius: 24px;
 		color: #32288c;
 		font-size: 24px;
@@ -39,7 +40,7 @@
 	}
 
 	h1 {
-		margin-top: 300px;
+		margin-top: 26vh;
 		font-size: 120px;
 		font-weight: 900;
 	}
