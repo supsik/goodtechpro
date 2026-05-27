@@ -4,6 +4,7 @@
 		<client-only>
 			<about-us />
 		</client-only>
+		<our-services />
 	</div>
 </template>
 <script setup>

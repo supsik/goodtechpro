@@ -18,7 +18,7 @@
 				>
 					<div class="about-us__item-left">
 						<h2>Немного о нас</h2>
-						<div 
+						<div
 							class="about-us__item-description" 
 							v-html="slide.content"
 							ref="slideContents"
