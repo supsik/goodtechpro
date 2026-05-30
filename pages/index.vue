@@ -5,6 +5,7 @@
 			<about-us />
 		</client-only>
 		<our-services />
+		<request-form />
 	</div>
 </template>
 <script setup>

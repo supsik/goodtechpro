@@ -25,7 +25,7 @@ const props = defineProps({
 .footer {
 	background-color: #0c1030;
 	padding-block: 52px 32px;
-	margin-top: auto;
+	margin-top: 52px;
 
 	.order__btn { margin-top: 42px }
 
