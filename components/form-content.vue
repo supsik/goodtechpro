@@ -514,6 +514,11 @@ const resetAll = () => {
     border-color: #007bff;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
   }
+
+  option {
+    width: 100%;
+    background-color: #13163c;
+  }
 }
 
 .price-preview {
@@ -530,17 +535,17 @@ const resetAll = () => {
     margin-bottom: 8px;
   }
 
-  .price-value {
-    font-size: 24px;
-    font-weight: bold;
-    color: #007bff;
-    margin-bottom: 8px;
-  }
-
   .price-note {
     font-size: 11px;
     color: rgba(255, 255, 255, 0.5);
   }
+}
+
+.price-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 8px;
 }
 
 .saved-answers {
@@ -763,14 +768,18 @@ const resetAll = () => {
   }
 }
 
-@media (max-width: 768px) {
+@include mq($md) {
   .form-content {
-    padding: 0 15px;
+    margin-top: 16px;
+  }
+
+  .tabs {
+    margin-top: 14px;
   }
 
   .tab-button {
-    padding: 10px 16px;
-    font-size: 14px;
+    padding: 10px 0;
+    font-size: clamp(0.75rem, 0.6338rem + 0.5025vw, 0.875rem);
   }
 
   .questionnaire-tab,
@@ -778,8 +787,16 @@ const resetAll = () => {
     padding: 20px;
   }
 
+  .question-label {
+    font-size: clamp(0.75rem, 0.5176rem + 1.005vw, 1rem);
+  }
+
   .price-value {
-    font-size: 20px;
+    font-size: clamp(1rem, 0.7676rem + 1.005vw, 1.25rem);
+  }
+
+  .submit-btn {
+    font-size: clamp(0.75rem, 0.5176rem + 1.005vw, 1rem);
   }
 }
 </style>
