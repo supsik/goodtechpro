@@ -27,7 +27,10 @@ const props = defineProps({
 	padding-block: 52px 32px;
 	margin-top: 52px;
 
-	.order__btn { margin-top: 42px }
+	.order__btn {
+		margin-top: 42px;
+		max-width: 240px;
+	}
 
 	@include mq($lg) { padding-block: 32px 24px }
 }

@@ -5,7 +5,7 @@
 			<about-us />
 		</client-only>
 		<our-services />
-		<request-form />
+		<request-form class="container" />
 	</div>
 </template>
 <script setup lang="ts">
@@ -18,5 +18,4 @@ useSeoMeta({
 });
 </script>
 <style lang='scss'>
-
 </style>
