@@ -8,10 +8,10 @@
 			>
 				<div class="our-services__item-bg" />
 				<div class="our-services__item-content">
-					<img :src="item.icon" alt="">
+					<img :src="item.icon" :alt="item.title">
 					<h3>{{ item.title }}</h3>
 					<span>{{ item.description }}</span>
-					<nuxt-link :to="item.link">Подробнее →</nuxt-link>
+					<nuxt-link :to="item.link" :aria-label="`Ссылка на ${item.title}`">Подробнее →</nuxt-link>
 				</div>
 			</div>
 		</div>
@@ -73,7 +73,11 @@ const servicesData = ref([
 
 	@include mq($xl) { grid-template-columns: repeat(2, 1fr) }
 
-	@include mq($md) { grid-template-columns: 1fr }
+	@include mq($md) {
+		margin-top: 24px;
+		grid-template-columns: 1fr;
+		gap: 18px;
+	}
 }
 
 .our-services__item {
@@ -127,11 +131,24 @@ const servicesData = ref([
 	}
 
 	@include mq($md) {
+		padding: 24px;
+
 		img { width: 20% }
 
-		h3 { font-size: clamp(1.13rem, calc(0.776rem + 1.508vw), 1.50rem) }
+		h3 {
+			margin-top: 14px;
+			font-size: clamp(1.13rem, calc(0.776rem + 1.508vw), 1.50rem);
+		}
 
-		span { font-size: clamp(0.88rem, calc(0.526rem + 1.508vw), 1.25rem) }
+		span {
+			margin-top: 10px;
+			font-size: clamp(0.88rem, calc(0.526rem + 1.508vw), 1.25rem);
+		}
+
+		a {
+			margin-top: 20px;
+			font-size: 16px;
+		}
 	}
 }
 </style>

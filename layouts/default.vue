@@ -31,6 +31,8 @@ const layoutNavigation = ref([
 }
 
 .order__btn {
+	display: grid;
+	place-items: center;
 	background-color: #fff;
 	border-radius: 16px;
 	color: #0048ff;

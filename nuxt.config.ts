@@ -3,6 +3,14 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 	css: ['assets/scss/index.scss'],
+	app: {
+		head: {
+			title: 'GoodTech',
+			link: [
+				{ rel: 'icon', type: 'image/x-icon', href: '/favicon.svg' },
+			],
+		},
+	},
 	vite: {
 		css: {
 			preprocessorOptions: {

@@ -8,7 +8,7 @@
 				</li>
 			</ul>
 		</nav>
-		<button class="order__btn">Оставить заявку</button>
+		<a href="#request-form" class="order__btn">Оставить заявку</a>
 	</div>
 </template>
 <script setup lang="ts">

@@ -10,9 +10,7 @@
 						</li>
 					</ul>
 				</nav>
-				<button class="order__btn order__btn--desktop">
-					Оставить заявку
-				</button>
+				<a href="#request-form" class="order__btn order__btn--desktop">Оставить заявку</a>
 				<button
 					class="header__burger-btn"
 					:class="{ 'header__burger-btn--active': isBurgerActive }"
@@ -34,9 +32,7 @@
 						</li>
 					</ul>
 				</nav>
-				<button class="order__btn">
-					Оставить заявку
-				</button>
+				<a href="#request-form" class="order__btn">Оставить заявку</a>
 			</div>
 		</div>
 	</div>
@@ -191,7 +187,6 @@ const isBurgerActive = ref(false);
 			div:nth-child(1) { top: 8px }
 
 			div:nth-child(3) { top: -6px }
-
 		}
 	}
 }
@@ -228,7 +223,7 @@ const isBurgerActive = ref(false);
 }
 
 .header__navigation--desktop,
-.order__btn--desktop {
+.order__btn.order__btn--desktop {
 	display: block;
 
 	@include mq($lg) { display: none }

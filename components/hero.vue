@@ -2,7 +2,7 @@
 	<div class="hero">
 		<h1>GoodTech</h1>
 		<span>История вашего сайта начинается здесь</span>
-		<button class="order__btn">Оставить заявку</button>
+		<a href="#request-form" class="order__btn">Оставить заявку</a>
 	</div>
 </template>
 <script setup></script>
@@ -23,8 +23,6 @@
 		border-radius: 24px;
 		color: #32288c;
 		font-size: 24px;
-		font-weight: 500;
-		background-color: #fff;
 
 		@include mq($lg) {
 			width: 240px;

@@ -282,7 +282,7 @@ onUnmounted(() => {
 
 	@include mq($lg) {
 		margin-top: 20px;
-		font-size: clamp(0.75rem, calc(0.4014rem + 1.5075vw), 1.125rem);
+		font-size: clamp(0.8rem, calc(0.4014rem + 1.5075vw), 1.125rem);
 	}
 }
 
