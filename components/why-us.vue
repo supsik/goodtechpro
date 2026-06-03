@@ -42,8 +42,10 @@ const data = ref([
 ])
 </script>
 <style lang='scss'>
-.why-us__title {
-	margin-top: 32px;
+.why-us {
+	margin-top: 72px;
+
+	@include mq($md) { margin-top: 42px }
 }
 
 .why-us__list {
@@ -51,16 +53,20 @@ const data = ref([
 	margin-top: 52px;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 32px;
+
+	@include mq($lg) { grid-template-columns: 1fr }
 }
 
 .why-us__list-item {
+	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
+	cursor: default;
 
 	& * {
-		color: #d0d0d0;
+		color: #ffffff56;
 		transition: all 0.3s ease;
 	}
 
@@ -79,13 +85,32 @@ const data = ref([
 	}
 
 	h3 {
-		font-size: 20px;
+		font-size: clamp(1.125rem, 0.8173rem + 0.4808vw, 1.25rem);
 		margin-top: 16px;
 	}
 
 	p {
 		margin-top: 8px;
-		font-size: 16px;
+		font-size: clamp(0.875rem, 0.5673rem + 0.4808vw, 1rem);
+	}
+
+	@include mq($lg) {
+		width: 50%;
+
+		h3 { font-size: clamp(0.875rem, 0.7336rem + 0.6116vw, 1.125rem) }
+
+		p { font-size: clamp(0.75rem, 0.6793rem + 0.3058vw, 0.875rem) }
+	}
+
+	@include mq($md) {
+		width: 100%;
+
+		& * { color: #FFF }
+
+		.why-us__list-item-icon {
+			width: 48px;
+			height: 48px;
+		}
 	}
 }
 </style>

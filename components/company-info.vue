@@ -12,7 +12,7 @@
 
   p {
     margin-top: 16px;
-    font-size: 18px;
+    font-size: clamp(0.75rem, 0.5378rem + 0.9174vw, 1.125rem);
     line-height: 1.6;
   }
 }

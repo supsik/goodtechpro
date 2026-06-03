@@ -5,7 +5,7 @@
 			<about-us />
 		</client-only>
 		<our-services />
-		<request-form class="container" />
+		<request-form />
 	</div>
 </template>
 <script setup lang="ts">
