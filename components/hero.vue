@@ -9,7 +9,7 @@
 <style lang="scss">
 .hero {
 	height: 100vh;
-	background-image: url("/images/hero-background.png");
+	background-image: url("/images/hero-background.webp");
 	background-size: cover;
 	background-position: bottom;
 	display: flex;

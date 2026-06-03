@@ -6,6 +6,10 @@
 	color: #FFF;
 }
 
+svg * {
+	color: inherit;
+}
+
 html {
   scroll-behavior: smooth;
 }

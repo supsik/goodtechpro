@@ -1,8 +1,8 @@
 <template>
 	<div class="page-wr">
-		<ui-header :layoutNavigation/>
+		<layout-header :layoutNavigation/>
 		<slot />
-		<ui-footer :layoutNavigation/>
+		<layout-footer :layoutNavigation/>
 	</div>
 </template>
 <script setup lang="ts">
@@ -17,7 +17,7 @@ const layoutNavigation = ref([
 	},
 	{
 		name: "Политика конфиденциальности",
-		link: "/confidential",
+		link: "/policy",
 	}
 ])
 </script>

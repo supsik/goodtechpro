@@ -41,13 +41,14 @@ const props = defineProps({
 	ul {
 		display: flex;
 		flex-direction: column;
-		gap: 12px;
+		gap: 18px;
 	}
 
 	a {
 		color: #ffffff76;
 		position: relative;
 		transition: .2s;
+		font-size: 20px;
 
 		&:hover { color: #FFF }
 	}
