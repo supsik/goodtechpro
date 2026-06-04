@@ -6,8 +6,8 @@
 	color: #FFF;
 }
 
-svg * {
-	color: inherit;
+svg, svg * {
+	color: inherit !important;
 }
 
 html {
