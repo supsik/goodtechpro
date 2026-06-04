@@ -90,6 +90,16 @@ const servicesData = ref([
 
 		.our-services__item-bg { opacity: .55 }
 	}
+
+	@include mq($md) {
+		width: 70%;
+		min-width: 350px;
+		margin: 0 auto;
+	}
+
+	@include mq($sm) {
+		width: 100%;
+	}
 }
 
 .our-services__item-bg {

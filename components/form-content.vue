@@ -16,40 +16,88 @@
 		</div>
 		<div class="tab-content">
 			<div v-if="activeTab === 'questionnaire'" class="questionnaire-tab">
-				<form @submit.prevent="saveAndGoToFeedback">
-					<div
-						class="question"
-						v-for="(question, index) in questions"
-						:key="index"
-					>
-						<label :for="'question-' + index" class="question-label">
-							{{ question.text }}
-							<span v-if="question.required" class="required">*</span>
-						</label>
-						<input
-							v-if="question.type === 'text'"
-							:id="'question-' + index"
-							v-model="questionnaireAnswers[index]"
-							type="text"
-							:placeholder="question.placeholder"
-							class="form-input"
-						/>
-						<select
-							v-else-if="question.type === 'select'"
-							:id="'question-' + index"
-							v-model="questionnaireAnswers[index]"
-							class="form-select"
-						>
-							<option value="">Выберите вариант</option>
-							<option
-								v-for="(option, optIndex) in question.options"
-								:key="optIndex"
-								:value="option.text"
+				<div v-if="!isQuestionnaireStarted" class="questionnaire-start">
+					<p class="intro-text">
+						Пройдите опрос, чтобы получить предварительную оценку проекта и перейти к форме обратной связи.
+					</p>
+					<button type="button" class="submit-btn start-btn" @click="startQuestionnaire">
+						Пройти опрос
+					</button>
+				</div>
+
+				<div v-else class="questionnaire-form">
+					<form @submit.prevent="handleQuestionSubmit">
+						<div class="progress">
+							Вопрос {{ currentQuestionIndex + 1 }} из {{ questions.length }}
+						</div>
+
+						<div class="question">
+							<label class="question-label">
+								{{ currentQuestion.text }}
+								<span v-if="currentQuestion.required" class="required">*</span>
+							</label>
+
+							<div v-if="currentQuestion.type === 'text'">
+								<input
+									:id="'question-' + currentQuestionIndex"
+									v-model="questionnaireAnswers[currentQuestionIndex]"
+									type="text"
+									:placeholder="currentQuestion.placeholder"
+									class="form-input"
+								/>
+							</div>
+
+							<div v-else-if="currentQuestion.type === 'select'" class="radio-group">
+								<label
+									class="radio-option"
+									v-for="(option, optIndex) in currentQuestion.options"
+									:key="optIndex"
+									:for="`question-${currentQuestionIndex}-option-${optIndex}`"
+								>
+									<input
+										type="radio"
+										:id="`question-${currentQuestionIndex}-option-${optIndex}`"
+										:name="'question-' + currentQuestionIndex"
+										:value="option.text"
+										v-model="questionnaireAnswers[currentQuestionIndex]"
+										class="radio-input"
+									/>
+									<span :for="`question-${currentQuestionIndex}-option-${optIndex}`">
+										{{ option.text }}
+									</span>
+								</label>
+							</div>
+						</div>
+
+						<div class="question-navigation">
+							<button
+								type="button"
+								class="secondary-btn"
+								@click="previousQuestion"
+								v-if="currentQuestionIndex > 0"
 							>
-								{{ option.text }}
-							</option>
-						</select>
-					</div>
+								← Назад
+							</button>
+							<button
+								type="button"
+								class="secondary-btn"
+								@click="nextQuestion"
+								v-if="!isLastQuestion"
+								:disabled="!canMoveNext"
+							>
+								Далее
+							</button>
+							<button
+								type="submit"
+								class="submit-btn"
+								v-else
+								:disabled="!canMoveNext"
+							>
+								Перейти к форме обратной связи →
+							</button>
+						</div>
+					</form>
+
 					<div v-if="calculatedPrice" class="price-preview">
 						<div class="price-label">Примерная стоимость:</div>
 						<div class="price-value">{{ formatPrice(calculatedPrice) }}</div>
@@ -57,14 +105,8 @@
 							*Точную стоимость рассчитает менеджер после консультации
 						</div>
 					</div>
-					<button
-						type="submit"
-						class="submit-btn"
-						:disabled="!isQuestionnaireValid"
-					>
-						Перейти к форме обратной связи →
-					</button>
-				</form>
+				</div>
+
 				<span class="form-content__info">* Опрос и его результат не являются публичной офертой</span>
 			</div>
 			<div v-if="activeTab === 'feedback'" class="feedback-tab">
@@ -194,6 +236,7 @@ const questions: Question[] = [
 	{
 		text: "Сколько страниц планируется на вашем сайте?",
 		type: "select",
+		required: true,
 		options: [
 			{ text: "1-3", priceMin: 25000, priceMax: 50000 },
 			{ text: "4-10", priceMin: 35000, priceMax: 75000 },
@@ -204,6 +247,7 @@ const questions: Question[] = [
 	{
 		text: "Направление сайта",
 		type: "select",
+		required: true,
 		options: [
 			{ text: "Лендинг", priceMin: 25000, priceMax: 50000 },
 			{ text: "Интернет-магазин", priceMin: 35000, priceMax: 75000 },
@@ -216,6 +260,22 @@ const questions: Question[] = [
 const questionnaireAnswers = ref<(string | null)[]>(
 	new Array(questions.length).fill(null),
 );
+
+const isQuestionnaireStarted = ref(false);
+const currentQuestionIndex = ref(0);
+
+const currentQuestion = computed(() => questions[currentQuestionIndex.value]);
+const isLastQuestion = computed(
+	() => currentQuestionIndex.value === questions.length - 1,
+);
+
+const canMoveNext = computed(() => {
+	const answer = questionnaireAnswers.value[currentQuestionIndex.value];
+	if (currentQuestion.value.required) {
+		return answer && answer.trim().length > 0;
+	}
+	return true;
+});
 
 const hasSavedAnswers = computed(() => {
 	return questionnaireAnswers.value.some(
@@ -295,8 +355,38 @@ const saveAndGoToFeedback = () => {
 	}
 };
 
+const startQuestionnaire = () => {
+	isQuestionnaireStarted.value = true;
+	currentQuestionIndex.value = 0;
+};
+
+const nextQuestion = () => {
+	if (!canMoveNext.value) {
+		alert("Пожалуйста, выберите вариант ответа, чтобы перейти дальше.");
+		return;
+	}
+
+	if (currentQuestionIndex.value < questions.length - 1) {
+		currentQuestionIndex.value += 1;
+	}
+};
+
+const previousQuestion = () => {
+	if (currentQuestionIndex.value > 0) {
+		currentQuestionIndex.value -= 1;
+	}
+};
+
+const handleQuestionSubmit = () => {
+	if (canMoveNext.value) {
+		saveAndGoToFeedback();
+	}
+};
+
 const clearAnswers = () => {
 	questionnaireAnswers.value = new Array(questions.length).fill(null);
+	isQuestionnaireStarted.value = false;
+	currentQuestionIndex.value = 0;
 };
 
 const validateForm = (): boolean => {
@@ -457,17 +547,6 @@ const resetAll = () => {
 	animation: fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-		transform: translateY(10px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
-}
-
 .questionnaire-tab,
 .feedback-tab {
 	max-width: 600px;
@@ -519,24 +598,82 @@ const resetAll = () => {
 	}
 }
 
-.price-preview {
-	margin: 24px 0;
-	padding: 16px;
-	background: rgba(0, 123, 255, 0.1);
-	border-radius: 10px;
-	border: 1px solid rgba(0, 123, 255, 0.3);
+.questionnaire-start {
 	text-align: center;
+	padding: 24px 16px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 16px;
+	background: rgba(255, 255, 255, 0.04);
+	margin-bottom: 24px;
+}
 
-	.price-label {
-		font-size: 14px;
-		color: rgba(255, 255, 255, 0.8);
-		margin-bottom: 8px;
-	}
+.intro-text {
+	margin-bottom: 24px;
+	font-size: 16px;
+	color: rgba(255, 255, 255, 0.9);
+}
 
-	.price-note {
-		font-size: 11px;
-		color: rgba(255, 255, 255, 0.5);
+.radio-group {
+	display: grid;
+	gap: 12px;
+}
+
+.radio-option {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 14px 16px;
+	background: rgba(255, 255, 255, 0.04);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 12px;
+	cursor: pointer;
+}
+
+.radio-option:hover {
+	border-color: rgba(0, 123, 255, 0.4);
+}
+
+.radio-input {
+	width: 18px;
+	height: 18px;
+	accent-color: #007bff;
+}
+
+.question-navigation {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 14px;
+	margin-top: 24px;
+
+	button {
+		height: 52px;
 	}
+}
+
+.secondary-btn,
+.start-btn {
+	height: 52px;
+	padding: 0 14px;
+	border-radius: 10px;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	background: rgba(255, 255, 255, 0.08);
+	color: #fff;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.25s ease;
+}
+
+.secondary-btn:disabled,
+.submit-btn:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+}
+
+.progress {
+	margin-bottom: 18px;
+	font-size: 14px;
+	color: rgba(255, 255, 255, 0.7);
 }
 
 .price-value {
@@ -750,6 +887,27 @@ const resetAll = () => {
 	text-align: center;
 }
 
+.price-preview {
+	margin-top: 24px;
+	padding: 20px;
+	background: rgba(0, 123, 255, 0.1);
+	border-radius: 10px;
+	border: 1px solid rgba(0, 123, 255, 0.3);
+	text-align: center;
+
+	.price-label {
+		font-size: 14px;
+		color: rgba(255, 255, 255, 0.7);
+		margin-bottom: 6px;
+	}
+
+	.price-note {
+		margin-top: 8px;
+		font-size: 12px;
+		color: rgba(255, 255, 255, 0.6);
+	}
+}
+
 .reset-btn {
 	padding: 12px 24px;
 	background: rgba(255, 255, 255, 0.2);
@@ -795,6 +953,17 @@ const resetAll = () => {
 
 	.submit-btn {
 		font-size: clamp(0.75rem, 0.5176rem + 1.005vw, 1rem);
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
 </style>
