@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@vueuse/core": "^14.3.0",
+    "@vueuse/nuxt": "^14.3.0",
     "liquid-glass-vue": "^0.0.1",
     "nuxt": "^3.21.6",
     "sass": "^1.99.0",

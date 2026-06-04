@@ -69,6 +69,8 @@ import 'swiper/css';
 import 'swiper/css/effect-fade';
 import type { SwiperOptions, Swiper as SwiperType } from 'swiper/types';
 
+const { width } = useWindowSize();
+
 const data = ref([
 	{
 		content : 'Мы — Good Tech. Мы не сторонние исполнители, а полноценное digital-звено вашей команды. Наша  миссия — стать техническим воплощением ваших целей: мы говорим на языке бизнеса и переводим его на язык безупречного кода, дизайна и цифровых  стратегий. Наша задача — ваш успех.',
@@ -97,6 +99,9 @@ const swiperHeight    = ref(0);
 const imageTransform = ref({});
 
 const handleMouseMove = (event: MouseEvent) => {
+	if (width.value < 768)
+		return;
+
 	const target = event.currentTarget as HTMLElement;
 	const rect = target.getBoundingClientRect();
 	
@@ -316,6 +321,10 @@ onUnmounted(() => {
 	@include mq($lg) {
 		width: 90px;
 		height: 4px;
+	}
+
+	@include mq($md) {
+		&:hover { background: #FFF; transform: none }
 	}
 }
 
