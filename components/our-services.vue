@@ -11,7 +11,7 @@
 					<img :src="item.icon" :alt="item.title">
 					<h3>{{ item.title }}</h3>
 					<span>{{ item.description }}</span>
-					<nuxt-link :to="item.link" :aria-label="`Ссылка на ${item.title}`">Подробнее →</nuxt-link>
+					<a href="#request-form" :aria-label="`Ссылка на ${item.title}`">Подробнее →</a>
 				</div>
 			</div>
 		</div>
@@ -23,37 +23,31 @@ const servicesData = ref([
 		title       : 'Разработка web-сайтов',
 		description : 'Наша команда создает современные и эффективные сайты. Мы превращаем ваши идеи в работающие решения, которые привлекают клиентов и растут вместе с бизнесом.',
 		icon        : '/images/laptop.png',
-		link        : '/test'
 	},
 	{
 		title       : 'Разработка web-сайтов',
 		description : 'Наша команда создает современные и эффективные сайты. Мы превращаем ваши идеи в работающие решения, которые привлекают клиентов и растут вместе с бизнесом.',
 		icon        : '/images/laptop.png',
-		link        : '/test'
 	},
 	{
 		title       : 'Разработка web-сайтов',
 		description : 'Наша команда создает современные и эффективные сайты. Мы превращаем ваши идеи в работающие решения, которые привлекают клиентов и растут вместе с бизнесом.',
 		icon        : '/images/laptop.png',
-		link        : '/test'
 	},
 	{
 		title       : 'Разработка web-сайтов',
 		description : 'Наша команда создает современные и эффективные сайты. Мы превращаем ваши идеи в работающие решения, которые привлекают клиентов и растут вместе с бизнесом.',
 		icon        : '/images/laptop.png',
-		link        : '/test'
 	},
 	{
 		title       : 'Разработка web-сайтов',
 		description : 'Наша команда создает современные и эффективные сайты. Мы превращаем ваши идеи в работающие решения, которые привлекают клиентов и растут вместе с бизнесом.',
 		icon        : '/images/laptop.png',
-		link        : '/test'
 	},
 	{
 		title       : 'Разработка web-сайтов',
 		description : 'Наша команда создает современные и эффективные сайты. Мы превращаем ваши идеи в работающие решения, которые привлекают клиентов и растут вместе с бизнесом.',
 		icon        : '/images/laptop.png',
-		link        : '/test'
 	}
 ])
 </script>
@@ -89,6 +83,8 @@ const servicesData = ref([
 		box-shadow: 0 4px 6px 0 #00000050;
 
 		.our-services__item-bg { opacity: .55 }
+
+		.our-services__item-content { opacity: 1 }
 	}
 
 	@include mq($md) {
@@ -99,6 +95,7 @@ const servicesData = ref([
 
 	@include mq($sm) {
 		width: 100%;
+		min-width: 100%;
 	}
 }
 
@@ -120,6 +117,8 @@ const servicesData = ref([
 	padding: 32px;
 	position: relative;
 	z-index: 3;
+	opacity: .4;
+	transition: .3s;
 	
 	img { width: 34% }
 
@@ -160,5 +159,7 @@ const servicesData = ref([
 			font-size: 16px;
 		}
 	}
+
+	@include mq($sm) { opacity: 1 }
 }
 </style>

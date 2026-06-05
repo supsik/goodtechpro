@@ -41,6 +41,7 @@
 				</ul>
 			</div>
 		</div>
+		<a href="#request-form" class="order__btn">Оставить заявку</a>
 		<div class="footer__bottom">
 			<span>© 2026 ООО «GoodTech»</span>
 			<div class="footer__list soc-section">
@@ -80,20 +81,83 @@ const props = defineProps({
 		max-width: 240px;
 	}
 
-	@include mq($lg) { padding-block: 32px 24px }
-}
-.footer__content {
-	margin-top: 32px;
-	display: flex;
-	gap: 80px;
+	& > .order__btn {
+		display: none;
+		margin-top: 100px;
+	}
 
-	h3 {
-		font-size: 24px;
-		font-weight: 500;
+	@include mq($xl) {
+		& > .order__btn { display: grid }
+	}
+
+	@include mq($lg) {
+		padding-top: 32px;
+		
+		& > .order__btn {
+			max-width: unset;
+			height: 58px;
+			border-radius: 26px;
+			grid-column: 1 / 3;
+			margin-top: 72px;
+			font-size: 22px;
+		}
 	}
 }
 
-.footer__description { max-width: 520px }
+.footer__content {
+	margin-top: 32px;
+	display: flex;
+	gap: 4%;
+
+	.soc-section { display: none }
+
+	h3 {
+		font-size: clamp(1.25rem, 0.9643rem + 0.5952vw, 1.5rem);
+		font-weight: 500;
+	}
+
+	@include mq($xl) {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 52px 40px;
+
+		.order__btn { display: none }
+
+		.footer__list {
+			grid-row: 2;
+
+			&:first-of-type { margin-left: 0 }
+		}
+
+		.soc-section { display: block }
+	}
+
+	@include mq($md) {
+		grid-template-columns: repeat(2, 1fr);
+	
+		.soc-section { display: none }
+	}
+
+	@include mq($sm) {
+		grid-template-columns: 1fr;
+	
+		.footer__list { grid-row: unset }
+	}
+}
+
+.footer__description {
+	max-width: 520px;
+
+	@include mq($xl) {
+		max-width: unset;
+		grid-column: 1 / 3;
+	}
+
+	@include mq($sm) {
+		grid-column: 1;
+		font-size: 14px;
+	}
+}
 
 .footer__list {
 	&:first-of-type { margin-left: auto }
@@ -117,7 +181,7 @@ const props = defineProps({
 		color: #ffffff76;
 		position: relative;
 		transition: 0.2s;
-		font-size: 20px;
+		font-size: clamp(0.875rem, calc(-0.25rem + 1.25vw), 1.25rem);
 		font-weight: 500;
 
 		&:hover { color: #fff }
@@ -146,6 +210,14 @@ const props = defineProps({
 				height: 100%;
 			}
 		}
+	}
+
+	@include mq($xl) { margin-top: 32px }
+
+	@include mq($sm) {
+		font-size: 14px;
+
+		.soc-section ul { gap: 16px }
 	}
 }
 </style>
