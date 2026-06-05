@@ -226,19 +226,6 @@ onUnmounted(() => {
 
 .about-us__item-left {
 	max-width: 900px;
-
-	h2 {
-		font-size: 52px;
-		font-weight: 500;
-	}
-
-	@include mq($xl) {
-		h2 { font-size: 32px }
-	}
-
-	@include mq($lg) {
-		h2 { font-size: clamp(1rem, calc(0.6514rem + 1.5075vw), 1.375rem) }
-	}
 }
 
 .about-us__item-right {

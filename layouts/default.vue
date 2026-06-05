@@ -13,7 +13,7 @@ const layoutNavigation = ref([
 	},
 	{
 		name: "Наши проекты",
-		link: "/portfolio",
+		link: "/cases",
 	},
 	{
 		name: "Политика конфиденциальности",
