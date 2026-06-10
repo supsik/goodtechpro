@@ -805,6 +805,10 @@ const resetAll = () => {
     font-size: 14px;
   }
 
+  input {
+    height: 52px;
+  }
+
   input,
   textarea {
     width: 100%;
